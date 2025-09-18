@@ -4,6 +4,7 @@ pub trait Compile {
 
 pub enum Expr {
     Binary(ExprBinary),
+    Unary(ExprUnary),
 }
 
 impl Compile for Expr {
@@ -30,6 +31,9 @@ impl Compile for ExprBinary {
             BinOp::Sub => format!("{a}-{b}"),
             BinOp::Mul => format!("{a}*{b}"),
             BinOp::Div => format!("{a}/{b}"),
+            BinOp::Add => format!("{a}*{b}"),
+            BinOp::Ior => format!("1-((1-{a})*(1-{b}))"),
+            BinOp::Xor => format!("({a}-{b})**2"),
         }
     }
 }
@@ -39,4 +43,27 @@ enum BinOp {
     Sub,
     Mul,
     Div,
+    And,
+    Ior,
+    Xor,
+}
+
+struct ExprUnary {
+    op: UnOp,
+    expr: Box<Expr>,
+}
+
+impl Compile for ExprUnary {
+    fn compile(&self) -> String {
+        let e = self.expr;
+        match self.op {
+            UnOp::Not => format!("1-{e}"),
+            UnOp::Neg => format!("-{e}"),
+        }
+    }
+}
+
+enum BinOp {
+    Not,
+    Neg,
 }
