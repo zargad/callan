@@ -1,14 +1,42 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
+pub trait Compile {
+    fn compile(&self) -> String;
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+pub enum Expr {
+    Binary(ExprBinary),
+}
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+impl Compile for Expr {
+    fn compile(&self) -> String {
+        let inner = match self {
+            Self::Binary(e) => e.compile(),
+        };
+        format!("({inner})")
     }
+}
+
+struct ExprBinary {
+    left: Box<Expr>,
+    op: BinOp,
+    right: Box<Expr>,
+}
+
+impl Compile for ExprBinary {
+    fn compile(&self) -> String {
+        let a = self.left;
+        let b = self.right;
+        match self.op {
+            BinOp::Add => format!("{a}+{b}"),
+            BinOp::Sub => format!("{a}-{b}"),
+            BinOp::Mul => format!("{a}*{b}"),
+            BinOp::Div => format!("{a}/{b}"),
+        }
+    }
+}
+
+enum BinOp {
+    Add,
+    Sub,
+    Mul,
+    Div,
 }
