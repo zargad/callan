@@ -6,6 +6,7 @@ pub enum Expr {
     Binary(ExprBinary),
     Unary(ExprUnary),
     Lit(ExprLit),
+    If(ExprIf),
 }
 
 impl Compile for Expr {
@@ -14,6 +15,7 @@ impl Compile for Expr {
             Self::Binary(e) => e.compile(),
             Self::Unary(e) => e.compile(),
             Self::Lit(e) => e.compile(),
+            Self::If(e) => e.compile(),
         };
         format!("({inner})")
     }
@@ -88,6 +90,23 @@ impl Compile for ExprLit {
                 format!("0")
             },
         }
+    }
+}
+
+struct ExprIf {
+    cond: Box<Expr>,
+    then_branch: Box<Expr>,
+    else_branch: Box<Expr>,
+}
+
+impl Compile for ExprIf {
+    fn compile(&self) -> String {
+        format!(
+            "({COND}*{THEN})+((1-{COND})*{ELSE})",
+            COND = self.cond.compile(),
+            THEN = self.then_branch.compile(),
+            ELSE = self.else_branch.compile(),
+        )
     }
 }
 
