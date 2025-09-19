@@ -7,6 +7,7 @@ pub enum Expr {
     Unary(ExprUnary),
     Lit(ExprLit),
     If(ExprIf),
+    Var(ExprVar),
 }
 
 impl Compile for Expr {
@@ -16,6 +17,7 @@ impl Compile for Expr {
             Self::Unary(e) => e.compile(),
             Self::Lit(e) => e.compile(),
             Self::If(e) => e.compile(),
+            Self::Var(e) => e.compile(),
         };
         format!("({inner})")
     }
@@ -82,14 +84,14 @@ enum ExprLit {
 impl Compile for ExprLit {
     fn compile(&self) -> String {
         match self {
-            Self::Int(s) => format!("{s}"),
-            Self::Float(s) => format!("{s}"),
+            Self::Int(s) => s,
+            Self::Float(s) => s,
             Self::Bool(b) => if *b {
-                format!("1")
+                "1"
             } else {
-                format!("0")
+                "0"
             },
-        }
+        }.into()
     }
 }
 
@@ -107,6 +109,34 @@ impl Compile for ExprIf {
             THEN = self.then_branch.compile(),
             ELSE = self.else_branch.compile(),
         )
+    }
+}
+
+enum ExprVar {
+    A,
+    B,
+    C,
+    D,
+    E,
+    F,
+    X,
+    Y,
+    M,
+}
+
+impl Compile for ExprVar {
+    fn compile(&self) -> String {
+        match self {
+            Self::A => "A",
+            Self::B => "B",
+            Self::C => "C",
+            Self::D => "D",
+            Self::E => "E",
+            Self::F => "F",
+            Self::X => "X",
+            Self::Y => "Y",
+            Self::M => "M",
+        }.into()
     }
 }
 
