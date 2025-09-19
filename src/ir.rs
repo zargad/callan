@@ -7,9 +7,9 @@ pub enum Expr {
 }
 
 pub struct ExprBinary {
-    left: Box<Expr>,
-    op: BinOp,
-    right: Box<Expr>,
+    pub left: Box<Expr>,
+    pub op: BinOp,
+    pub right: Box<Expr>,
 }
 
 pub enum BinOp {
@@ -23,8 +23,8 @@ pub enum BinOp {
 }
 
 pub struct ExprUnary {
-    op: UnOp,
-    expr: Box<Expr>,
+    pub op: UnOp,
+    pub expr: Box<Expr>,
 }
 
 pub enum UnOp {
@@ -38,11 +38,11 @@ pub enum ExprLit {
 }
 
 pub struct ExprIf {
-    cond: Box<Expr>,
-    then_branch: Box<Expr>,
-    else_branch: Box<Expr>,
+    pub cond: Box<Expr>,
+    pub then_branch: Box<Expr>,
+    pub else_branch: Box<Expr>,
 }
 
 pub struct ExprVar {
-    name: char,
+    pub name: char,
 }
